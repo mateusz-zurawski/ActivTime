@@ -35,7 +35,7 @@ public class TrackingActivity extends AppCompatActivity {
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSION_FINE_LOCATION = 99;
 
-    TextView tv_lat,tv_lon,tv_altitude,tv_accutancy,tv_speed,tv_sensor,tv_updates,tv_address,tv_wayPointCounts;
+    TextView tv_lat,tv_lon,tv_altitude,tv_accutancy,tv_speed,tv_sensor,tv_updates,tv_address;
     Switch  sw_gps;
     Button btn_startStopActivity;
 
@@ -69,10 +69,6 @@ public class TrackingActivity extends AppCompatActivity {
         tv_altitude = findViewById(R.id.tv_altitude);
         tv_accutancy = findViewById(R.id.tv_accuracy);
         tv_speed = findViewById(R.id.tv_speed);
-        tv_sensor = findViewById(R.id.tv_sensor);
-        tv_updates = findViewById(R.id.tv_updates);
-        tv_address = findViewById(R.id.tv_address);
-        sw_gps = findViewById(R.id.sw_gps);
 
         btn_startStopActivity = findViewById(R.id.startStopActivity);
 
@@ -96,41 +92,25 @@ public class TrackingActivity extends AppCompatActivity {
             }
         };
 
-
-        sw_gps.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if (sw_gps.isChecked()){
-                    //most accurate - use GPS
-                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    tv_sensor.setText("Using GPS sensors");
-                }
-                else {
-                    locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                    tv_sensor.setText("Using Towers + WIFI");
-                }
-            }
-        });
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        
 
         updateGPS();
     }// end of create method
 
     private void stopLocationTracking() {
-        tv_updates.setText("Location is NOT being tracked");
         tv_lat.setText("NOT tracking location");
         tv_lon.setText("NOT tracking location");
         tv_speed.setText("NOT tracking location");
-        tv_address.setText("NOT tracking location");
         tv_accutancy.setText("NOT tracking location");
         tv_altitude.setText("NOT tracking location");
-        tv_sensor.setText("NOT tracking location");
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
     }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
 
-        tv_updates.setText("Location is being tracked");
+//        tv_updates.setText("Location is being tracked");
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallBack, Looper.myLooper());
         updateGPS();
     }
@@ -166,7 +146,7 @@ public class TrackingActivity extends AppCompatActivity {
 
                     updateUIValue(location);
                     currentLocation = location;
-                    Log.v("INFO", " entLocation "+String.valueOf(currentLocation.getLatitude()));
+                    Log.v("INFO", " ---> "+String.valueOf(currentLocation.getLatitude()));
 
 
                 }
@@ -209,7 +189,7 @@ public class TrackingActivity extends AppCompatActivity {
         }catch (NullPointerException e){
 
         }
-        updateGPS();
+//        updateGPS();
     }
 
     public void onClickStartStopGPS(View view) {
